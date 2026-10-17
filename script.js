@@ -10,6 +10,7 @@ const translations = {
     aboutBody: "带着这个问题，我从设计的视角，探索物理世界与数字世界中人与智能的关系。",
     interestsTitle: "当前关注", contactTitle: "保持联系。", contactBody: "欢迎通过邮件与我交流。",
     backTop: "回到顶部", navigation: "主导航",
+    githubSupport: "访问 GitHub 主页", starsLoading: "Star 总数加载中", starsUnavailable: "Star 总数暂不可用", starsScope: "所有公开仓库",
     description: "Jiale Ma，上海交通大学设计学专业学生。探索物理世界与数字世界中人与智能的关系。"
   },
   en: {
@@ -22,9 +23,65 @@ const translations = {
     aboutBody: "This question guides my exploration of the relationship between people and intelligence across the physical and digital worlds, through the lens of design.",
     interestsTitle: "Current Interests", contactTitle: "Get in touch.", contactBody: "Feel free to reach out by email.",
     backTop: "Back to top", navigation: "Main navigation",
+    githubSupport: "Visit my GitHub profile", starsLoading: "Loading total stars", starsUnavailable: "Total stars unavailable", starsScope: "All public repositories",
     description: "Jiale Ma, a design student at Shanghai Jiao Tong University, exploring the relationship between people and intelligence."
   }
 };
+
+let starCount = null;
+let starState = "loading";
+
+function renderStarCount() {
+  const language = document.documentElement.lang === "en" ? "en" : "zh";
+  const copy = translations[language];
+  document.getElementById("star-count").textContent = starState === "ready"
+    ? new Intl.NumberFormat(language).format(starCount)
+    : "—";
+  const label = starState === "ready"
+    ? `${copy.githubSupport} · ${copy.starsScope}: ${starCount} Stars`
+    : `${copy.githubSupport} · ${copy[starState === "loading" ? "starsLoading" : "starsUnavailable"]}`;
+  const link = document.getElementById("github-stars");
+  link.setAttribute("aria-label", label);
+  link.title = label;
+}
+
+// Public read-only API: no access token, login, or simulated local increment.
+async function loadStarCount() {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
+  try {
+    let total = 0;
+    const seenRepositories = new Set();
+    // Fetch every page, including owned forks, to count all public repositories.
+    for (let page = 1; ; page += 1) {
+      const response = await fetch(`https://api.github.com/users/ma-jiale/repos?type=owner&sort=full_name&per_page=100&page=${page}`, {
+        signal: controller.signal,
+        headers: { Accept: "application/vnd.github+json" }
+      });
+      if (!response.ok) throw new Error("GitHub could not provide the star count.");
+      const repositories = await response.json();
+      if (!Array.isArray(repositories)) throw new Error("Invalid repository list.");
+      for (const repository of repositories) {
+        if (!Number.isSafeInteger(repository.stargazers_count) || repository.stargazers_count < 0) {
+          throw new Error("Invalid star count.");
+        }
+        if (!seenRepositories.has(repository.id)) {
+          total += repository.stargazers_count;
+          seenRepositories.add(repository.id);
+        }
+      }
+      if (repositories.length < 100) break;
+    }
+    // Only show a total after every page succeeds, never a partial count.
+    starCount = total;
+    starState = "ready";
+  } catch {
+    starState = "unavailable";
+  } finally {
+    clearTimeout(timeout);
+    renderStarCount();
+  }
+}
 
 function setLanguage(language) {
   const copy = translations[language];
@@ -42,6 +99,7 @@ function setLanguage(language) {
   });
   // The switch still works when browser privacy settings disable local storage.
   try { localStorage.setItem("jiale-language", language); } catch { /* No persistence available. */ }
+  renderStarCount();
 }
 
 document.querySelectorAll("[data-language]").forEach((button) => {
@@ -54,3 +112,4 @@ try {
   if (savedLanguage === "en") initialLanguage = "en";
 } catch { /* Default to Chinese. */ }
 setLanguage(initialLanguage);
+loadStarCount();

@@ -28,12 +28,17 @@
 
     <main id="main">
       <section class="hero" aria-labelledby="hero-title">
-        <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span><span data-i18n="eyebrow">设计 · 人 · 智能</span></p>
-        <h1 id="hero-title"><span class="greeting" data-i18n="greeting">你好，我是</span><br>Jiale Ma<span class="title-period">.</span></h1>
-        <p class="hero-intro"><span data-i18n="introStart">我是一名</span><a id="university" href="https://baike.baidu.com/item/上海交通大学/131671" target="_blank" rel="noopener noreferrer">上海交通大学</a><span data-i18n="introEnd">的设计学专业学生，关注物理世界与数字世界中，智能如何与人交互。</span></p>
-        <div class="hero-actions">
-          <a class="button" href="#about"><span data-i18n="aboutAction">关于我</span><span aria-hidden="true">↓</span></a>
-          <a class="text-link" href="mailto:jiale.ma@sjtu.edu.cn"><span data-i18n="contactAction">联系我</span><span aria-hidden="true">↗</span></a>
+        <div class="hero-main">
+          <div class="hero-copy">
+            <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span><span data-i18n="eyebrow">设计 · 人 · 智能</span></p>
+            <h1 id="hero-title"><span class="greeting" data-i18n="greeting">你好，我是</span><br>Jiale Ma<span class="title-period">.</span></h1>
+            <p class="hero-intro"><span data-i18n="introStart">我是一名</span><a id="university" href="https://baike.baidu.com/item/上海交通大学/131671" target="_blank" rel="noopener noreferrer">上海交通大学</a><span data-i18n="introEnd">的设计学专业学生，关注物理世界与数字世界中，智能如何与人交互。</span></p>
+            <div class="hero-actions">
+              <a class="button" href="#about"><span data-i18n="aboutAction">关于我</span><span aria-hidden="true">↓</span></a>
+              <a class="text-link" href="mailto:jiale.ma@sjtu.edu.cn"><span data-i18n="contactAction">联系我</span><span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+        <img class="portrait" src="assets/portrait.jpg" alt="Jiale Ma" width="160" height="160" decoding="async">
         </div>
         <div class="hero-footnote" aria-hidden="true"><span>PHYSICAL × DIGITAL</span><span>01 — INTRODUCTION</span></div>
       </section>
@@ -60,7 +65,14 @@
       </section>
     </main>
 
-    <footer><span>Jiale Ma</span><a href="#" class="back-top"><span data-i18n="backTop">回到顶部</span> ↑</a></footer>
+    <footer>
+      <span>Jiale Ma</span>
+      <a class="github-stars" id="github-stars" href="https://github.com/ma-jiale" target="_blank" rel="noopener noreferrer" aria-label="访问 GitHub 主页">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.8 5.7 6.3.9-4.5 4.4 1.1 6.2-5.7-3-5.7 3 1.1-6.2L3.2 9.6l6.3-.9Z"/></svg>
+        <span class="star-count" id="star-count" aria-live="polite">—</span>
+      </a>
+      <a href="#" class="back-top"><span data-i18n="backTop">回到顶部</span> ↑</a>
+    </footer>
   </div>
 </body>
 </html>
